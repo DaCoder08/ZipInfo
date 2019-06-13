@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html class="ios" lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>Ionic</title>
+        <link href="https://unpkg.com/@ionic/core@4.0.0-rc.0/css/ionic.bundle.css" rel="stylesheet">
+        <script src="https://unpkg.com/@ionic/core@4.0.0-rc.0/dist/ionic.js"></script>
+    </head>
+    <body>
+        <ion-header>
+            <ion-toolbar>
+                <center>
+                    <h1>Zip Info</h1>
+                </center>
+            </ion-toolbar>
+        </ion-header>
+        <ion-content>
+            <ion-grid>
+                <form>
+                    <ion-col>
+                        <ion-item>
+                            <ion-label>Zip Code:</ion-label>
+                            <ion-input placeholder="Enter A US Zip Code" id="zip"></ion-input>
+                        </ion-item>
+                    </ion-col>
+                    <ion-col>
+                        <ion-button expand="block" shape="round" onclick="getZipInfo()">Find</ion-button>
+                    </ion-col>
+                    <ion-col>
+                        <ion-card id="data">
+                            <ion-card-header>
+                                <ion-card-subtitle id="code"></ion-card-subtitle>
+                                <ion-card-title id="place"></ion-card-title>
+                            </ion-card-header>
+                            <ion-card-content>
+                                <ion-list>
+                                    <ion-item>
+                                        <ion-label>
+                                            <strong>State: </strong>
+                                            <div id="state"></div>
+                                        </ion-label>
+                                    </ion-item>
+                                </ion-list>
+                            </ion-card-content>
+                        </ion-card>
+                    </ion-col>
+                </form>
+            </ion-grid>
+        </ion-content>
+    </body>
+    <script type="text/javascript">
+    	document.getElementById('data').style.visibility = "hidden"
+        async function getZipInfo() {
+            var zipcode = document.getElementById('zip').value;
+            var res = await fetch(`https://api.zippopotam.us/US/${zipcode}`)
+            res.json().then((result) => {
+            	document.getElementById('data').style.visibility = "visible"
+                var data = result;
+                document.getElementById('code').innerText = zipcode;
+                document.getElementById('place').innerText = data.places[0]["place name"]
+                document.getElementById('state').innerHTML = `${data.places[0]["state"]}(${data.places[0]["state abbreviation"]})`;
+            });
+        }
+    </script>
+</html>
