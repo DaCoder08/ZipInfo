@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="ios" lang="en" dir="ltr">
+<html mode="ios" lang="en" dir="ltr">
     <head>
         <meta charset="utf-8">
         <title>Ionic</title>
@@ -52,14 +52,31 @@
     	document.getElementById('data').style.visibility = "hidden"
         async function getZipInfo() {
             var zipcode = document.getElementById('zip').value;
-            var res = await fetch(`https://api.zippopotam.us/US/${zipcode}`)
-            res.json().then((result) => {
-            	document.getElementById('data').style.visibility = "visible"
-                var data = result;
-                document.getElementById('code').innerText = zipcode;
-                document.getElementById('place').innerText = data.places[0]["place name"]
-                document.getElementById('state').innerHTML = `${data.places[0]["state"]}(${data.places[0]["state abbreviation"]})`;
-            });
+            if(zipcode.toString().length == 5){
+            	var res = await fetch(`https://api.zippopotam.us/US/${zipcode}`)
+	            res.json().then((result) => {
+	            	document.getElementById('data').style.visibility = "visible"
+	                var data = result;
+	                document.getElementById('code').innerText = zipcode;
+	                document.getElementById('place').innerText = data.places[0]["place name"]
+	                document.getElementById('state').innerHTML = `${data.places[0]["state"]}(${data.places[0]["state abbreviation"]})`;
+	            });
+            }else{
+            	presentAlert()
+            }
         }
+        async function presentAlert() {
+ 		  var bobby = document.createElement("ion-alert-controller")
+ 		  document.body.appendChild(bobby)
+		  const alertController = document.querySelector('ion-alert-controller');
+		  await alertController.componentOnReady();
+
+		  const alert = await alertController.create({
+		    header: 'Not Valid Zipcode',
+		    message: 'Please Enter A Correct Zipcode',
+		    buttons: ['OK']
+		  });
+		  return await alert.present();
+		}
     </script>
 </html>
